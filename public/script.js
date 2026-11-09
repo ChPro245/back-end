@@ -1,5 +1,7 @@
 const API = '/produtos';
 const token = localStorage.getItem('token');
+const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+const admin = Boolean(usuario && usuario.admin);
 
 const formulario = document.getElementById('formulario');
 const campoNome = document.getElementById('nome');
@@ -57,7 +59,8 @@ function criarItem(produto) {
   botoes.className = 'botoes';
   botoes.append(botaoEditar, botaoApagar);
 
-  item.append(info, botoes);
+  item.append(info);
+  if (admin) item.append(botoes);
   return item;
 }
 
@@ -169,5 +172,6 @@ botaoSair.addEventListener('click', sair);
 if (!token) {
   window.location.replace('login.html');
 } else {
+  formulario.style.display = admin ? '' : 'none';
   carregarProdutos();
 }

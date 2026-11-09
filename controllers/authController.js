@@ -1,14 +1,18 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const repo = require('../dados/usuariosRepositorio');
+const { ehAdmin } = require('../middlewares/somenteAdmin');
 
 function montarResposta(usuario) {
   const token = jwt.sign(
-    { id: usuario.id, nome: usuario.nome },
+    { id: usuario.id, nome: usuario.nome, email: usuario.email },
     process.env.JWT_SECRET,
     { expiresIn: '2h' }
   );
-  return { token, usuario: { id: usuario.id, nome: usuario.nome, email: usuario.email } };
+  return {
+    token,
+    usuario: { id: usuario.id, nome: usuario.nome, email: usuario.email, admin: ehAdmin(usuario.email) }
+  };
 }
 
 function texto(valor) {
